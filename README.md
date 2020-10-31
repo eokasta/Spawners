@@ -1,3 +1,3 @@
-# Basic Template
+# Spawner 
 
-A template for Minecraft Plugins.
+Spawner system
