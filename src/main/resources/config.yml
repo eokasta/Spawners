@@ -1,0 +1,19 @@
+mysql:
+  host: "localhost"
+  database: "minecraft_plugins"
+  user: "root"
+  password: ""
+  port: 3306
+  table: "spawners"
+
+allowed-worlds:
+  - world
+
+# In minutes:
+save-timer-delay: 5
+stack-entities-radius: 10
+
+mobs:
+  COW:
+    drops:
+      LEATHER: 1000
