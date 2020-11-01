@@ -41,6 +41,6 @@ public class SpawnerInteractListeners implements Listener {
             return;
         }
 
-        spawner.showInventory(player);
+        spawner.getSpawnerInventory().showInventory(player);
     }
 }

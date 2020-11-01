@@ -13,10 +13,15 @@ import com.google.gson.Gson;
 import dev.arantes.inventorymenulib.listeners.InventoryListener;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnerPlugin extends JavaPlugin {
 
+
+    @Getter
+    private Economy economy;
     @Getter
     private Settings settings;
     @Getter
@@ -32,6 +37,11 @@ public class SpawnerPlugin extends JavaPlugin {
     @SneakyThrows
     @Override
     public void onEnable() {
+        if (!setupEconomy()) {
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
         this.gson = new Gson();
 
         InventoryListener.register(this);
@@ -51,7 +61,19 @@ public class SpawnerPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        manager.getModifiedDao().getAll().forEach(manager.getModifiedDao()::execute);
         databaseManager.getDataSource().close();
     }
 
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null)
+            return false;
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null)
+            return false;
+
+        economy = rsp.getProvider();
+        return economy != null;
+    }
 }
