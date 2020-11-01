@@ -24,8 +24,6 @@ public class DatabaseManager {
     private final String spawnersTable;
     @Getter
     private final Set<Spawner> changedSpawners = new HashSet<>();
-    @Getter
-    private BukkitTask bukkitTask;
 
     public DatabaseManager(SpawnerPlugin plugin) throws SQLException {
         this.plugin = plugin;

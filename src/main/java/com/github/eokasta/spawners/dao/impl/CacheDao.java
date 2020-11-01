@@ -1,9 +1,10 @@
-package com.github.eokasta.spawners.storage.impl;
+package com.github.eokasta.spawners.dao.impl;
 
 import com.github.eokasta.spawners.entities.Spawner;
-import com.github.eokasta.spawners.storage.dao.Dao;
+import com.github.eokasta.spawners.dao.Dao;
 import org.bukkit.Location;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class CacheDao implements Dao<Spawner> {
 
     @Override
     public List<Spawner> getAll() {
-        return (List<Spawner>) spawners.values();
+        return new ArrayList<>(spawners.values());
     }
 
     @Override

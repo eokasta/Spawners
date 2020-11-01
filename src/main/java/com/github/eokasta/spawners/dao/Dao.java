@@ -1,4 +1,4 @@
-package com.github.eokasta.spawners.storage.dao;
+package com.github.eokasta.spawners.dao;
 
 import org.bukkit.Location;
 

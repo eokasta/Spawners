@@ -1,8 +1,8 @@
-package com.github.eokasta.spawners.storage.impl;
+package com.github.eokasta.spawners.dao.impl;
 
 import com.github.eokasta.spawners.entities.Spawner;
 import com.github.eokasta.spawners.storage.DatabaseManager;
-import com.github.eokasta.spawners.storage.dao.Dao;
+import com.github.eokasta.spawners.dao.Dao;
 import com.github.eokasta.spawners.utils.Helper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -38,7 +38,7 @@ public class SpawnerDao implements Dao<Spawner> {
             if (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                spawner = new Spawner(
+                spawner = new Spawner(database.getPlugin(),
                         resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),
@@ -67,7 +67,7 @@ public class SpawnerDao implements Dao<Spawner> {
             if (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                spawner = new Spawner(
+                spawner = new Spawner(database.getPlugin(),
                         resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),
@@ -111,7 +111,7 @@ public class SpawnerDao implements Dao<Spawner> {
             while (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                final Spawner spawner = new Spawner(
+                final Spawner spawner = new Spawner(database.getPlugin(),
                         resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),

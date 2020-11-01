@@ -1,5 +1,6 @@
 package com.github.eokasta.spawners.entities;
 
+import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.utils.Helper;
 import com.github.eokasta.spawners.utils.MakeItem;
 import dev.arantes.inventorymenulib.buttons.ItemButton;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Data
 public class Spawner {
 
+    private final SpawnerPlugin plugin;
     private int id;
     private Location location;
     private EntityType entityType;
@@ -26,7 +28,8 @@ public class Spawner {
 
     private InventoryGUI gui;
 
-    public Spawner(int id, Location location, EntityType entityType, String owner, double amount) {
+    public Spawner(SpawnerPlugin plugin, int id, Location location, EntityType entityType, String owner, double amount) {
+        this.plugin = plugin;
         this.id = id;
         this.location = location;
         this.entityType = entityType;
@@ -47,10 +50,29 @@ public class Spawner {
                         " &7Entity type: &f" + entityType.getName(),
                         " &7Owner: &f" + owner,
                         " &7Amount: &f" + Helper.formatBalance(amount),
-                        " &7Drops: &f" + (drops.isEmpty() ? "&cNo drops" : drops.get(Material.STONE)),
                         " ")
                 .build())
         );
+
+        final MakeItem makeItem = new MakeItem(Material.EMERALD);
+        makeItem.setName("&aDrops");
+        if (drops.isEmpty())
+            makeItem.addLore("&cNo drops.");
+        else
+            drops.forEach((material, amount) -> makeItem.addLore("&a" + material.name() + ": &f" + Helper.formatBalance(amount)));
+
+        gui.setButton(15, new ItemButton(makeItem.build()).setDefaultAction(event -> {
+            if (drops.isEmpty())
+                return;
+
+            new HashMap<>(drops).forEach((material, amount) -> {
+                event.getWhoClicked().sendMessage(Helper.format("&aSell x" + Helper.formatBalance(amount) + " " +
+                        material.name() + ": &f" + Helper.formatBalance(plugin.getManager().getCustomDrops().getPrice(material))));
+                drops.remove(material);
+                updateInventory();
+                plugin.getManager().getModifiedDao().save(this);
+            });
+        }));
 
         return gui;
     }

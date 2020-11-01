@@ -2,8 +2,9 @@ package com.github.eokasta.spawners.listeners;
 
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.entities.Spawner;
-import com.github.eokasta.spawners.entities.EntityStack;
+import com.github.eokasta.spawners.utils.EntityStack;
 import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +25,11 @@ public class SpawnerSpawnListeners implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onSpawn(SpawnerSpawnEvent event) {
         final Entity entity = event.getEntity();
-        final Block block = event.getSpawner().getBlock();
+        final CreatureSpawner creatureSpawner = event.getSpawner();
+        if (creatureSpawner == null)
+            return;
+
+        final Block block = creatureSpawner.getBlock();
 
         final Spawner spawner = plugin.getManager().get(block.getLocation());
         if (spawner == null) {

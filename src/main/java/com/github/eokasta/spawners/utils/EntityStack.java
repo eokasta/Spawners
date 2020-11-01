@@ -1,7 +1,8 @@
-package com.github.eokasta.spawners.entities;
+package com.github.eokasta.spawners.utils;
 
 import com.github.eokasta.nbtapi.nbt.NBTEntity;
 import com.github.eokasta.spawners.SpawnerPlugin;
+import com.github.eokasta.spawners.entities.Spawner;
 import com.github.eokasta.spawners.utils.Helper;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;

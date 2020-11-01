@@ -2,7 +2,7 @@ package com.github.eokasta.spawners.listeners;
 
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.entities.Spawner;
-import com.github.eokasta.spawners.storage.impl.ModifiedDao;
+import com.github.eokasta.spawners.dao.impl.ModifiedDao;
 import com.github.eokasta.spawners.utils.Helper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

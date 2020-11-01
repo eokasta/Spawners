@@ -1,7 +1,8 @@
 package com.github.eokasta.spawners.listeners;
 
+import com.github.eokasta.spawners.SpawnerManager;
 import com.github.eokasta.spawners.SpawnerPlugin;
-import com.github.eokasta.spawners.entities.EntityStack;
+import com.github.eokasta.spawners.utils.EntityStack;
 import com.github.eokasta.spawners.entities.Spawner;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -10,14 +11,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import java.util.List;
+
 public class SpawnerEntityDeathListeners implements Listener {
 
     private final SpawnerPlugin plugin;
     private final EntityStack entityStack;
+    private final SpawnerManager spawnerManager;
 
     public SpawnerEntityDeathListeners(SpawnerPlugin plugin) {
         this.plugin = plugin;
         this.entityStack = plugin.getEntityStack();
+        this.spawnerManager = plugin.getManager();
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -39,12 +44,15 @@ public class SpawnerEntityDeathListeners implements Listener {
         if (spawner == null)
             return;
 
-        /*
-        TODO: add modificated drop
-         */
-        spawner.getDrops().put(Material.STONE, spawner.getDrops().getOrDefault(Material.STONE, 0D) + stacks);
+        final List<Material> drops = spawnerManager.getCustomDrops().getDrops(entity.getType());
+        if (drops == null || drops.isEmpty())
+            return;
+
+        drops.forEach(material -> spawner.getDrops().put(material, stacks));
+        spawnerManager.getModifiedDao().save(spawner);
 
         event.getDrops().clear();
+        event.setDroppedExp(0);
     }
 
 }

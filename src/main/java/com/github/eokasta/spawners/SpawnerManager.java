@@ -2,10 +2,11 @@ package com.github.eokasta.spawners;
 
 import com.github.eokasta.nbtapi.nbt.NBTCompound;
 import com.github.eokasta.nbtapi.nbt.NBTItem;
+import com.github.eokasta.spawners.drops.CustomDrops;
 import com.github.eokasta.spawners.entities.Spawner;
-import com.github.eokasta.spawners.storage.impl.CacheDao;
-import com.github.eokasta.spawners.storage.impl.ModifiedDao;
-import com.github.eokasta.spawners.storage.impl.SpawnerDao;
+import com.github.eokasta.spawners.dao.impl.CacheDao;
+import com.github.eokasta.spawners.dao.impl.ModifiedDao;
+import com.github.eokasta.spawners.dao.impl.SpawnerDao;
 import com.github.eokasta.spawners.utils.Helper;
 import com.github.eokasta.spawners.utils.MakeItem;
 import lombok.Getter;
@@ -26,12 +27,17 @@ public class SpawnerManager {
     private final SpawnerDao spawnerDao;
     private final CacheDao cacheDao;
     private final ModifiedDao modifiedDao;
+    private final CustomDrops customDrops;
 
     public SpawnerManager(SpawnerPlugin plugin) {
         this.plugin = plugin;
         this.spawnerDao = new SpawnerDao(plugin.getDatabaseManager());
         this.cacheDao = new CacheDao();
-        this.modifiedDao = new ModifiedDao();
+        this.modifiedDao = new ModifiedDao(plugin);
+        modifiedDao.initTask();
+        this.customDrops = new CustomDrops(plugin);
+        customDrops.loadMobDrops();
+        customDrops.loadPriceDrops();
     }
 
     public void save(Spawner spawner) {
@@ -90,7 +96,7 @@ public class SpawnerManager {
         final EntityType entityType = EntityType.valueOf(compound.getString("entityType"));
         final double amount = compound.getDouble("amount");
 
-        return new Spawner(0, null, entityType, null, amount * (multiplyItemAmount ? itemStack.getAmount() : 1));
+        return new Spawner(plugin, 0, null, entityType, null, amount * (multiplyItemAmount ? itemStack.getAmount() : 1));
     }
 
     public Spawner getNearbySpawner(Location location, int radius, EntityType entityType, String owner) {

@@ -16,4 +16,7 @@ stack-entities-radius: 10
 mobs:
   COW:
     drops:
-      LEATHER: 1000
+      - LEATHER
+
+drops:
+  LEATHER: 1000

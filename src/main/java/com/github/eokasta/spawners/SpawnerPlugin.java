@@ -1,7 +1,7 @@
 package com.github.eokasta.spawners;
 
 import com.github.eokasta.spawners.commands.SpawnerCommand;
-import com.github.eokasta.spawners.entities.EntityStack;
+import com.github.eokasta.spawners.utils.EntityStack;
 import com.github.eokasta.spawners.listeners.SpawnerBlockListeners;
 import com.github.eokasta.spawners.listeners.SpawnerEntityDeathListeners;
 import com.github.eokasta.spawners.listeners.SpawnerInteractListeners;
