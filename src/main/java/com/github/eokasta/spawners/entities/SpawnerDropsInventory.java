@@ -80,12 +80,13 @@ public class SpawnerDropsInventory {
 
                 plugin.getEconomy().depositPlayer(player, totalPrice);
                 spawner.getDrops().remove(material);
+                spawner.setModified(true);
                 player.sendMessage(Helper.format("&aYou sold x%s &f%s &afrom your spawner for &f%s&a coins.", Helper.formatBalance(amount), material.name(), Helper.formatBalance(totalPrice))); /* TODO: change message */
-                plugin.getManager().getModifiedDao().save(spawner);
 
                 updateInventory();
                 show(player);
             }));
+
         });
 
         builder.setContent(content);
@@ -97,7 +98,6 @@ public class SpawnerDropsInventory {
             emptyDrops.show(player);
         else
             builder.build().show(player);
-
     }
 
 }

@@ -1,12 +1,11 @@
-package com.github.eokasta.spawners;
+package com.github.eokasta.spawners.manager;
 
 import com.github.eokasta.nbtapi.nbt.NBTCompound;
 import com.github.eokasta.nbtapi.nbt.NBTItem;
-import com.github.eokasta.spawners.drops.CustomDrops;
-import com.github.eokasta.spawners.entities.Spawner;
+import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.dao.impl.CacheDao;
-import com.github.eokasta.spawners.dao.impl.ModifiedDao;
 import com.github.eokasta.spawners.dao.impl.SpawnerDao;
+import com.github.eokasta.spawners.entities.Spawner;
 import com.github.eokasta.spawners.utils.Helper;
 import com.github.eokasta.spawners.utils.MakeItem;
 import lombok.Getter;
@@ -15,6 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -26,18 +27,19 @@ public class SpawnerManager {
     private final SpawnerPlugin plugin;
     private final SpawnerDao spawnerDao;
     private final CacheDao cacheDao;
-    private final ModifiedDao modifiedDao;
     private final CustomDrops customDrops;
+
+    private BukkitTask saveTask;
 
     public SpawnerManager(SpawnerPlugin plugin) {
         this.plugin = plugin;
         this.spawnerDao = new SpawnerDao(plugin.getDatabaseManager());
         this.cacheDao = new CacheDao();
-        this.modifiedDao = new ModifiedDao(plugin);
-        modifiedDao.initTask();
         this.customDrops = new CustomDrops(plugin);
         customDrops.loadMobDrops();
         customDrops.loadPriceDrops();
+
+        initTask();
     }
 
     public void save(Spawner spawner) {
@@ -45,10 +47,7 @@ public class SpawnerManager {
     }
 
     public void delete(Spawner spawner) {
-        CompletableFuture.runAsync(() -> spawnerDao.delete(spawner)).whenComplete((v, t) -> {
-            cacheDao.delete(spawner);
-            modifiedDao.save(spawner);
-        });
+        CompletableFuture.runAsync(() -> spawnerDao.delete(spawner)).whenComplete((v, t) -> cacheDao.delete(spawner));
     }
 
     public Spawner get(Location location) {
@@ -61,7 +60,8 @@ public class SpawnerManager {
                     cacheDao.save(spawner1);
                 }
 
-            } catch (InterruptedException | ExecutionException ignored) { }
+            } catch (InterruptedException | ExecutionException ignored) {
+            }
 
         return spawner;
     }
@@ -96,7 +96,7 @@ public class SpawnerManager {
         final EntityType entityType = EntityType.valueOf(compound.getString("entityType"));
         final double amount = compound.getDouble("amount");
 
-        return new Spawner(plugin, 0, null, entityType, null, amount * (multiplyItemAmount ? itemStack.getAmount() : 1));
+        return new Spawner(0, null, entityType, null, amount * (multiplyItemAmount ? itemStack.getAmount() : 1));
     }
 
     public Spawner getNearbySpawner(Location location, int radius, EntityType entityType, String owner) {
@@ -122,6 +122,25 @@ public class SpawnerManager {
         }
 
         return null;
+    }
+
+    public void initTask() {
+        this.saveTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                final long before = System.currentTimeMillis();
+                plugin.getLogger().info("Saving spawners...");
+
+                cacheDao.getAll().forEach(spawner -> {
+                    if (spawner.isModified()) {
+                        spawnerDao.save(spawner);
+                        spawner.setModified(false);
+                    }
+                });
+
+                plugin.getLogger().info("Saved spawners in " + (System.currentTimeMillis() - before) + "ms.");
+            }
+        }.runTaskTimerAsynchronously(plugin, 20L, 20 * 60 * plugin.getSettings().getSaveTimerDelay());
     }
 
 }

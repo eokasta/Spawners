@@ -38,8 +38,7 @@ public class SpawnerDao implements Dao<Spawner> {
             if (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                spawner = new Spawner(database.getPlugin(),
-                        resultSet.getInt("id"),
+                spawner = new Spawner(resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),
                         resultSet.getString("owner"),
@@ -67,8 +66,7 @@ public class SpawnerDao implements Dao<Spawner> {
             if (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                spawner = new Spawner(database.getPlugin(),
-                        resultSet.getInt("id"),
+                spawner = new Spawner(resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),
                         resultSet.getString("owner"),
@@ -111,8 +109,7 @@ public class SpawnerDao implements Dao<Spawner> {
             while (resultSet.next()) {
                 final Type type = new TypeToken<Map<Material, Double>>() {}.getType();
 
-                final Spawner spawner = new Spawner(database.getPlugin(),
-                        resultSet.getInt("id"),
+                final Spawner spawner = new Spawner(resultSet.getInt("id"),
                         Helper.deserializeLocation(resultSet.getString("location")),
                         EntityType.valueOf(resultSet.getString("entitytype")),
                         resultSet.getString("owner"),

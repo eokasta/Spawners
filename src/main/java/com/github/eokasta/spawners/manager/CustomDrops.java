@@ -1,4 +1,4 @@
-package com.github.eokasta.spawners.drops;
+package com.github.eokasta.spawners.manager;
 
 import com.github.eokasta.spawners.SpawnerPlugin;
 import lombok.Getter;

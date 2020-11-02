@@ -46,7 +46,7 @@ public class DatabaseManager {
         config.addDataSourceProperty("useServerPrepStmts", true);
         config.addDataSourceProperty("cacheResultSetMetadata", true);
 
-        config.setMaximumPoolSize(16);
+        config.setMaximumPoolSize(8);
         config.setConnectionTimeout(30000);
         this.dataSource = new HikariDataSource(config);
 
@@ -64,7 +64,8 @@ public class DatabaseManager {
     private void createTable(String table, String values) throws SQLException {
         try (
                 final Connection connection = dataSource.getConnection();
-                final PreparedStatement statement = connection.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS %s (%s);", table, values))) {
+                final PreparedStatement statement = connection.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS %s (%s);", table, values))
+        ) {
             statement.execute();
         }
     }

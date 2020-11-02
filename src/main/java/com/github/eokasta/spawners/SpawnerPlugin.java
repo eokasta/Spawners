@@ -1,6 +1,7 @@
 package com.github.eokasta.spawners;
 
-import com.github.eokasta.spawners.commands.SpawnerCommand;
+import com.github.eokasta.spawners.commands.GiveSpawnerCommand;
+import com.github.eokasta.spawners.manager.SpawnerManager;
 import com.github.eokasta.spawners.utils.EntityStack;
 import com.github.eokasta.spawners.listeners.SpawnerBlockListeners;
 import com.github.eokasta.spawners.listeners.SpawnerEntityDeathListeners;
@@ -18,7 +19,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnerPlugin extends JavaPlugin {
-
 
     @Getter
     private Economy economy;
@@ -52,7 +52,7 @@ public class SpawnerPlugin extends JavaPlugin {
 
         this.entityStack = new EntityStack(this);
 
-        new SpawnerCommand(this);
+        new GiveSpawnerCommand(this);
         new SpawnerBlockListeners(this);
         new SpawnerInteractListeners(this);
         new SpawnerSpawnListeners(this);
@@ -61,7 +61,6 @@ public class SpawnerPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        manager.getModifiedDao().getAll().forEach(manager.getModifiedDao()::execute);
         databaseManager.getDataSource().close();
     }
 

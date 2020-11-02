@@ -2,7 +2,6 @@ package com.github.eokasta.spawners.listeners;
 
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.entities.Spawner;
-import com.github.eokasta.spawners.dao.impl.ModifiedDao;
 import com.github.eokasta.spawners.utils.Helper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,11 +20,9 @@ import java.util.HashMap;
 public class SpawnerBlockListeners implements Listener {
 
     private final SpawnerPlugin plugin;
-    private final ModifiedDao modifiedDao;
 
     public SpawnerBlockListeners(SpawnerPlugin plugin) {
         this.plugin = plugin;
-        this.modifiedDao = plugin.getManager().getModifiedDao();
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -53,7 +50,7 @@ public class SpawnerBlockListeners implements Listener {
                 && nearbySpawner.getEntityType() == spawner.getEntityType()) {
 
             nearbySpawner.setAmount(nearbySpawner.getAmount() + spawner.getAmount());
-            modifiedDao.save(nearbySpawner);
+            spawner.setModified(true);
 
             player.sendMessage(Helper.format("&aStacked +%s spawners. Total: %s",
                     Helper.formatBalance(spawner.getAmount()),

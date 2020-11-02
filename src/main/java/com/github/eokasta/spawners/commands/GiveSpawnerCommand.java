@@ -1,28 +1,32 @@
-package com.github.eokasta.spawners.commands.subcommands;
+package com.github.eokasta.spawners.commands;
 
-import com.github.eokasta.commandlib.annotations.SubCommandInformation;
+import com.github.eokasta.commandlib.CommandManager;
+import com.github.eokasta.commandlib.annotations.CommandInformation;
 import com.github.eokasta.commandlib.exceptions.CommandLibException;
-import com.github.eokasta.commandlib.providers.SubCommand;
+import com.github.eokasta.commandlib.providers.Command;
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.utils.Helper;
 import com.github.eokasta.spawners.utils.Verifications;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
-@SubCommandInformation(name = {"give", "dar"},
-        permission = "spawners.give",
-        usage = "&c/spawner give <player> <entitytype> <amount> &7- &cGive spawners to a player."
-)
-public class GiveSubCommand extends SubCommand {
+@CommandInformation(name = {"givespawner", "spawnergive"})
+public class GiveSpawnerCommand extends Command {
 
     private final SpawnerPlugin plugin;
 
+    public GiveSpawnerCommand(SpawnerPlugin plugin) {
+        this.plugin = plugin;
+
+        setUsage("&c/spawnergive <player> <entitytype> <amount> &7- &cGive spawners to a player."); /* TODO: change message */
+
+        CommandManager.registerCommand(plugin, this);
+    }
+
     @Override
-    public void execute(CommandSender sender, String[] args) throws CommandLibException {
+    public void perform(CommandSender sender, String label, String[] args) throws CommandLibException {
         if (args.length < 3)
             throw new CommandLibException(getUsage());
 

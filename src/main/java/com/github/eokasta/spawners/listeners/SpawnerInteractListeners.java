@@ -2,6 +2,7 @@ package com.github.eokasta.spawners.listeners;
 
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.entities.Spawner;
+import com.github.eokasta.spawners.entities.SpawnerMainInventory;
 import com.github.eokasta.spawners.utils.Helper;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -41,6 +42,6 @@ public class SpawnerInteractListeners implements Listener {
             return;
         }
 
-        spawner.getSpawnerInventory().showInventory(player);
+        new SpawnerMainInventory(plugin, spawner).showInventory(player);
     }
 }

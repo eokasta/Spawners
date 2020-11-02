@@ -1,6 +1,6 @@
 package com.github.eokasta.spawners.listeners;
 
-import com.github.eokasta.spawners.SpawnerManager;
+import com.github.eokasta.spawners.manager.SpawnerManager;
 import com.github.eokasta.spawners.SpawnerPlugin;
 import com.github.eokasta.spawners.utils.EntityStack;
 import com.github.eokasta.spawners.entities.Spawner;
@@ -49,7 +49,7 @@ public class SpawnerEntityDeathListeners implements Listener {
             return;
 
         drops.forEach(material -> spawner.getDrops().put(material, stacks));
-        spawnerManager.getModifiedDao().save(spawner);
+        spawner.setModified(true);
 
         event.getDrops().clear();
         event.setDroppedExp(0);

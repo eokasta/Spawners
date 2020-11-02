@@ -37,7 +37,7 @@ public class SpawnerMainInventory {
         final MakeItem makeItem = new MakeItem(Material.EMERALD);
         makeItem.setName("&aDrops");
 
-        inventory.setButton(15, new ItemButton(makeItem.build()).setDefaultAction(event -> spawner.getDropsInventory().show((Player) event.getWhoClicked())));
+        inventory.setButton(15, new ItemButton(makeItem.build()).setDefaultAction(event -> new SpawnerDropsInventory(plugin, spawner).show((Player) event.getWhoClicked())));
     }
 
     public void showInventory(Player player) {
